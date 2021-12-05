@@ -8,12 +8,11 @@ module Days.DayX
 where
 
 import Data.Foldable (maximum, minimum)
-import qualified Data.HashMap.Monoidal as HashMap
 import qualified Data.List as L
-import Data.Semigroup (Sum (Sum))
 import RIO
 import qualified RIO.Text as T
 import qualified RIO.Text.Partial as T
+import Util (histogram)
 
 --- >>> L.sort $ concatMap mkLine test1
 -- [(0,9),(0,9), (1,9),(1,9), (2,9),(2,9),(3,4),(3,4),(3,9),(4,4),(4,9),(5,4),(5,9),(6,4),(7,0),(7,1),(7,2),(7,3),(7,4),(7,4),(8,4),(9,4)]
@@ -31,7 +30,7 @@ mkLine ((x1, y1), (x2, y2))
      in map (x1,) [start .. end]
   | otherwise = []
 
-genSolve f = length . filter (\(Sum x) -> x > (1 :: Integer)) . HashMap.elems . foldMap (foldMap (\c -> HashMap.singleton c (Sum 1)) . f)
+genSolve f = length . filter (\(_, x) -> x > 1) . histogram . concatMap f
 
 -- >>> solve1 test1
 -- 5
@@ -40,8 +39,9 @@ solve1 = genSolve mkLine
 mkLine2 :: ((Int, Int), (Int, Int)) -> [(Int, Int)]
 mkLine2 cs@((x1, y1), (x2, y2))
   | y1 == y2 || x1 == x2 = mkLine cs
-  | otherwise = let (xs, r : _) = span notThere $ L.iterate goDir (x1, y1) in r : xs
+  | otherwise = (x2, y2) : inBetweenPts
   where
+    inBetweenPts = takeWhile notThere $ L.iterate goDir (x1, y1)
     notThere (xN, yN) = xN /= x2 && yN /= y2
     goDir (xN, yN) = (xN + dir xN x2, yN + dir yN y2)
     dir z1 z2
