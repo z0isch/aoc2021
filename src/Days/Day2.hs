@@ -1,15 +1,15 @@
 module Days.Day2
-  ( part1
-  , part2
-  , test1
-  ) where
+  ( part1,
+    part2,
+    test1,
+  )
+where
 
-import           RIO
-
-import qualified RIO.Text                      as T
+import RIO
+import qualified RIO.Text as T
 
 data Dir = F | U | D
-    deriving stock Show
+  deriving stock (Show)
 
 test1 :: [(Dir, Integer)]
 test1 = parseInput "forward 5\ndown 5\nforward 8\nup 3\ndown 8\nforward 2"
@@ -30,10 +30,10 @@ goDir (hor, depth) (dir, m) = case dir of
 solve2 :: [(Dir, Integer)] -> Integer
 solve2 = (\(x, y, _) -> x * y) . foldl' goAim (0, 0, 0)
 
-goAim
-  :: (Integer, Integer, Integer)
-  -> (Dir, Integer)
-  -> (Integer, Integer, Integer)
+goAim ::
+  (Integer, Integer, Integer) ->
+  (Dir, Integer) ->
+  (Integer, Integer, Integer)
 goAim (hor, depth, aim) (dir, m) = case dir of
   F -> (hor + m, depth + (aim * m), aim)
   U -> (hor, depth, aim - m)
@@ -41,13 +41,13 @@ goAim (hor, depth, aim) (dir, m) = case dir of
 
 parseInput :: Text -> [(Dir, Integer)]
 parseInput = mapMaybe (fromWords . T.words) . T.lines
- where
-  fromWords [d, x] = (,) <$> parseDir d <*> readMaybe (T.unpack x)
-  fromWords _      = Nothing
-  parseDir "forward" = Just F
-  parseDir "up"      = Just U
-  parseDir "down"    = Just D
-  parseDir _         = Nothing
+  where
+    fromWords [d, x] = (,) <$> parseDir d <*> readMaybe (T.unpack x)
+    fromWords _ = Nothing
+    parseDir "forward" = Just F
+    parseDir "up" = Just U
+    parseDir "down" = Just D
+    parseDir _ = Nothing
 
 -- >>> part1
 -- 1499229

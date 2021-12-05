@@ -1,10 +1,11 @@
 module Days.DayX
-  ( part1
-  , part2
-  , test1
-  ) where
+  ( part1,
+    part2,
+    test1,
+  )
+where
 
-import           RIO
+import RIO
 
 --- >>> test1
 test1 = parseInput ""
@@ -18,9 +19,7 @@ solve2 = undefined
 parseInput = undefined
 
 -- >>> part1
-part1 :: IO Integer
 part1 = solve1 . parseInput <$> readFileUtf8 "./input/dayx.txt"
 
 -- >>> part2
-part2 :: IO Integer
 part2 = solve2 . parseInput <$> readFileUtf8 "./input/dayx.txt"
